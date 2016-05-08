@@ -1,0 +1,16 @@
+board:
+    width: 3
+    height: 3
+    cell: "     \n  {num}  \n     "
+    column_separator: "|"
+    row_separator: "="
+
+canvas:
+    fallback_width: 100
+    margin: 10
+    
+player: 
+    person_player:
+      maximum_length: 10
+    computer_player:
+      default_names: ["Mao", "Xerxes"]
