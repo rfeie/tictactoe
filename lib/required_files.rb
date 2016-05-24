@@ -15,6 +15,8 @@ require_relative 'game_config'
 require_relative 'player_generator'
 require_relative 'first_player_generator'
 require_relative 'additional_player_generator'
+require_relative 'path_operator'
+require_relative 'board_operator'
 
 require_relative 'input'
 require_relative 'output'

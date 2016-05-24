@@ -8,6 +8,7 @@ class MoveRater
 	def initialize(mark, board = Board.new)
 		@mark = mark
 		@board = board
+		@path_operator = PathOperator.new
 	end
 	
 	def get_best_node_from_open_spaces
@@ -30,11 +31,11 @@ class MoveRater
 
 	def rate_node(node)
 		rating = 0
-		full_rows_of_node = @board.get_full_rows_of_node(node)
+		full_rows_of_node = @board.create_paths_in_each_direction(node)
 
 		full_rows_of_node.each do |direction, path|
 			empty_nodes_rating = reserve_node_and_rate_empty_nodes(node, path)
-			if @board.path_empty?(path)
+			if @path_operator.path_empty?(path)
 				rating += BLANK_PATH_RATING
 			else
 				rating += rate_path_contents(path)
@@ -45,8 +46,8 @@ class MoveRater
 	end
 
 	def rate_path_contents(path)
-		mark = @board.find_unmixed_mark(path)
-		mark_count = @board.count_unmixed_mark(path)
+		mark = @path_operator.find_unmixed_mark(path)
+		mark_count = @path_operator.count_unmixed_mark(path)
 
 		if able_to_win?(mark, mark_count)
 			multiplier = (mark_count ** mark_count) * 2
@@ -69,7 +70,7 @@ class MoveRater
 
 	def rate_empty_nodes_in_path(path)
 		rating = 0
-		empty_nodes = @board.get_empty_nodes_in_path(path)
+		empty_nodes = @path_operator.get_empty_nodes_in_path(path)
 		empty_nodes.each do |node|
 			rating += rate_opposing_node(node)
 		end
@@ -78,10 +79,10 @@ class MoveRater
 
 	def rate_opposing_node(node)
 		rating = 0
-		full_rows_of_node = @board.get_full_rows_of_node(node)
+		full_rows_of_node = @board.create_paths_in_each_direction(node)
 
 		full_rows_of_node.each do |direction, path|
-			mark_count = @board.count_of_non_mark_in_path(path, @mark)
+			mark_count = @path_operator.count_of_non_mark_in_path(path, @mark)
 			rating += mark_count
 		end		
 		calculate_opposing_node_rating(rating)
